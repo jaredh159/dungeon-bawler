@@ -23,8 +23,8 @@ impl Map {
       for x in 0..SCREEN_WIDTH {
         let idx = map_idx(x, y);
         match self.tiles[idx] {
-          TileType::Floor => ctx.set(x, y, YELLOW, BLACK, to_cp437('.')),
-          TileType::Wall => ctx.set(x, y, GREEN, BLACK, to_cp437('#')),
+          TileType::Floor => ctx.set(x, y, BLACK, BLACK, to_cp437('.')),
+          TileType::Wall => ctx.set(x, y, DARKRED, DARKRED, to_cp437('#')),
         }
       }
     }
@@ -32,6 +32,13 @@ impl Map {
 
   pub fn can_entire_tile(&self, point: Point) -> bool {
     self.in_bounds(point) && self.tiles[map_idx(point.x, point.y)] == TileType::Floor
+  }
+
+  pub fn try_idx(&self, point: Point) -> Option<usize> {
+    if !self.in_bounds(point) {
+      return None;
+    }
+    Some(map_idx(point.x, point.y))
   }
 
   pub fn in_bounds(&self, point: Point) -> bool {
