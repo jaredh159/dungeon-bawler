@@ -26,8 +26,8 @@ impl MapBuilder {
       let proposed_room = Rect::with_size(
         rng.range(1, SCREEN_WIDTH - 10),  // x
         rng.range(1, SCREEN_HEIGHT - 10), // y
-        rng.range(3, 13),                 // width
-        rng.range(3, 13),                 // height
+        rng.range(2, 10),                 // width
+        rng.range(2, 10),                 // height
       );
       let mut overlap = false;
       for r in self.rooms.iter() {
