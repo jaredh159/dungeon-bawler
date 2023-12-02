@@ -23,6 +23,14 @@ impl State {
     let mut rng = RandomNumberGenerator::new();
     let map_builder = MapBuilder::new(&mut rng);
     spawn_player(&mut world, map_builder.player_start);
+    map_builder
+      .rooms
+      .iter()
+      .skip(1)
+      .map(|r| r.center())
+      .for_each(|pos| {
+        spawn_monster(&mut world, &mut rng, pos);
+      });
     resources.insert(map_builder.map);
     resources.insert(Camera::new(map_builder.player_start));
     State {
@@ -50,7 +58,7 @@ fn main() -> BError {
     .with_title("Dungeon Bawler")
     .with_fps_cap(30.0)
     .with_dimensions(DISPLAY_WIDTH, DISPLAY_HEIGHT)
-    .with_tile_dimensions(32, 32)
+    .with_tile_dimensions(40, 40)
     .with_resource_path("resources/")
     .with_font("dungeon-font.png", 32, 32)
     .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeon-font.png")
