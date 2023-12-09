@@ -53,8 +53,9 @@ impl GameState for State {
     ctx.cls(); // erase everything!
     ctx.set_active_console(1);
     ctx.cls(); // erase everything!
+    ctx.set_active_console(2);
+    ctx.cls();
     self.resources.insert(ctx.key);
-    // self.systems.execute(&mut self.world, &mut self.resources);
     let current_turn_state = self.resources.get::<TurnState>().unwrap().clone();
     match current_turn_state {
       TurnState::AwaitingInput => self
@@ -80,8 +81,10 @@ fn main() -> BError {
     .with_resource_path("resources/")
     .with_font("dungeon-font.png", 32, 32)
     .with_font("huckle-font.png", 32, 32)
+    .with_font("terminal8x8.png", 8, 8)
     .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeon-font.png")
     .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "huckle-font.png")
+    .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "terminal8x8.png")
     .build()?;
 
   main_loop(context, State::new())
