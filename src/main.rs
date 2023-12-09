@@ -79,8 +79,9 @@ fn main() -> BError {
     .with_tile_dimensions(40, 40)
     .with_resource_path("resources/")
     .with_font("dungeon-font.png", 32, 32)
+    .with_font("huckle-font.png", 32, 32)
     .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeon-font.png")
-    .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeon-font.png")
+    .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "huckle-font.png")
     .build()?;
 
   main_loop(context, State::new())
