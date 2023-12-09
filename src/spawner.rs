@@ -12,19 +12,29 @@ pub fn spawn_player(world: &mut World, pos: Point) {
   ));
 }
 
+fn goblin() -> (i32, String, FontCharType) {
+  (1, "Goblin :)".to_string(), to_cp437('g'))
+}
+
+fn huckle_troll() -> (i32, String, FontCharType) {
+  (4, "Huckle Troll".to_string(), to_cp437('O'))
+}
+
 pub fn spawn_monster(world: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
+  let (health, name, letter) = match rng.roll_dice(1, 10) {
+    1..=8 => goblin(),
+    _ => huckle_troll(),
+  };
+
   world.push((
     Enemy,
     pos,
     Render {
       color: ColorPair::new(WHITE, BLACK),
-      glyph: match rng.range(0, 4) {
-        0 => to_cp437('E'),
-        1 => to_cp437('O'),
-        2 => to_cp437('o'),
-        _ => to_cp437('g'),
-      },
+      glyph: letter,
     },
     MovingRandomly {},
+    Health { current: health, max: health },
+    Name(name),
   ));
 }

@@ -49,13 +49,19 @@ impl State {
 
 impl GameState for State {
   fn tick(&mut self, ctx: &mut BTerm) {
+    // clear all the layers
     ctx.set_active_console(0);
-    ctx.cls(); // erase everything!
+    ctx.cls();
     ctx.set_active_console(1);
-    ctx.cls(); // erase everything!
+    ctx.cls();
     ctx.set_active_console(2);
     ctx.cls();
+
+    // insert key and mouse position
     self.resources.insert(ctx.key);
+    ctx.set_active_console(0);
+    self.resources.insert(Point::from_tuple(ctx.mouse_pos()));
+
     let current_turn_state = self.resources.get::<TurnState>().unwrap().clone();
     match current_turn_state {
       TurnState::AwaitingInput => self
