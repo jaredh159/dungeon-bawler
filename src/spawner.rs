@@ -24,5 +24,6 @@ pub fn spawn_monster(world: &mut World, rng: &mut RandomNumberGenerator, pos: Po
         _ => to_cp437('g'),
       },
     },
+    MovingRandomly {},
   ));
 }
