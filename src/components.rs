@@ -15,7 +15,7 @@ pub struct Enemy;
 #[derive(Clone, Copy, PartialEq)]
 pub struct MovingRandomly;
 
-#[derive(Clone, Copy, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq)]
 pub struct WantsToMove {
   pub entity: Entity,
   pub destination: Point,
@@ -23,9 +23,15 @@ pub struct WantsToMove {
 
 #[derive(Clone, Copy, PartialEq)]
 pub struct Health {
-  pub current: i32, // u=unsigned integer, 8=8bits 0-255
+  pub current: i32, // u=unsigned integer, 32bits
   pub max: i32,
 }
 
 #[derive(Clone, PartialEq)]
 pub struct Name(pub String);
+
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct WantsToAttack {
+  pub attacker: Entity,
+  pub victim: Entity,
+}
