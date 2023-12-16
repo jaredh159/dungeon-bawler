@@ -9,6 +9,7 @@ pub fn spawn_player(world: &mut World, pos: Point) {
       glyph: to_cp437('@'),
     },
     Health { current: 4, max: 4 },
+    Name("Player".to_string()),
   ));
 }
 
