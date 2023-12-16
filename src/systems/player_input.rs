@@ -3,6 +3,8 @@ use crate::prelude::*;
 #[system]
 #[read_component(Point)]
 #[read_component(Player)]
+#[read_component(Enemy)]
+#[write_component(Health)]
 pub fn player_input(
   world: &mut SubWorld,
   commands: &mut CommandBuffer,
@@ -10,6 +12,7 @@ pub fn player_input(
   #[resource] turn_state: &mut TurnState,
 ) {
   let mut players = <(Entity, &Point)>::query().filter(component::<Player>());
+  let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
 
   if let Some(key) = key {
     let delta = match key {
@@ -26,7 +29,7 @@ pub fn player_input(
       .next()
       .unwrap();
 
-    let mut enemies = <(Entity, &Point)>::query().filter(component::<Enemy>());
+    let mut did_somethin = false;
     if delta.x != 0 || delta.y != 0 {
       let mut hit_something = false;
       enemies
@@ -35,6 +38,7 @@ pub fn player_input(
         .for_each(|(entity, _)| {
           // yes we hit something
           hit_something = true;
+          did_somethin = true;
           // say that we want to ATTACK
           commands.push((
             (),
@@ -47,7 +51,24 @@ pub fn player_input(
 
       // if we didn't hit, say that we want to MOVE
       if !hit_something {
+        did_somethin = true;
         commands.push(((), WantsToMove { entity: player_entity, destination }));
+      }
+    }
+
+    // !!! TWO MOST IMPORTANT RUST TYPES !!!
+    // Result -> 2 case: Ok(thing), Err(err)
+    // Option -> 2 case: Some(thing), None
+
+    if !did_somethin {
+      if let Ok(health) = world // gives us access to the value inside Result
+        .entry_mut(player_entity)
+        .unwrap()
+        .get_component_mut::<Health>()
+      {
+        // so inside here, we have the THING in the result
+        // heal by not moving, but not higher than max!
+        health.current = i32::min(health.max, health.current + 1);
       }
     }
     *turn_state = TurnState::PlayerTurn;
