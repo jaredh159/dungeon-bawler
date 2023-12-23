@@ -6,6 +6,7 @@ mod camera;
 mod components;
 mod map;
 mod map_builder;
+mod scratch;
 mod spawner;
 mod systems;
 mod turn_state;
@@ -77,6 +78,8 @@ impl GameState for State {
     render_draw_buffer(ctx).expect("Render error");
   }
 }
+
+use scratch::*;
 
 fn main() -> BError {
   let context = BTermBuilder::new()
