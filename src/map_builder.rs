@@ -5,6 +5,7 @@ pub struct MapBuilder {
   pub map: Map,
   pub rooms: Vec<Rect>,
   pub player_start: Point,
+  pub toothpaste_start: Point,
 }
 
 impl MapBuilder {
@@ -13,11 +14,31 @@ impl MapBuilder {
       map: Map::new(),
       rooms: vec![],
       player_start: Point::zero(),
+      toothpaste_start: Point::zero(),
     };
     mb.fill(TileType::Wall);
     mb.build_random_rooms(rng);
     mb.build_corridors(rng);
     mb.player_start = mb.rooms[0].center();
+    let dijkstra_map = DijkstraMap::new(
+      SCREEN_WIDTH,
+      SCREEN_HEIGHT,
+      &[mb.map.point2d_to_index(mb.player_start)],
+      &mb.map,
+      1024.0,
+    );
+    const UNREACHABLE: &f32 = &f32::MAX;
+
+    let farthest_reachable_index = dijkstra_map
+      .map
+      .iter() // give them one by one..
+      .enumerate() // package them in a tuple (index, value)
+      .filter(|(_, dist)| *dist < UNREACHABLE) // pitch unreachable
+      .max_by(|a, b| a.1.partial_cmp(b.1).unwrap()) // find biggest
+      .unwrap()
+      .0;
+
+    mb.toothpaste_start = mb.map.index_to_point2d(farthest_reachable_index);
     mb
   }
 

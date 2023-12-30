@@ -15,6 +15,20 @@ pub fn spawn_player(world: &mut World, pos: Point) {
   ));
 }
 
+#[allow(non_snake_case)]
+pub fn spawn_toothpaste_of_YALT(world: &mut World, pos: Point) {
+  world.push((
+    Item,
+    ToothpasteOfYALT,
+    pos,
+    Render {
+      color: ColorPair::new(WHITE, BLACK),
+      glyph: to_cp437('|'),
+    },
+    Name("Toothpaste of YALT |:^(".to_string()),
+  ));
+}
+
 fn drunken_goblin() -> (i32, String, FontCharType, bool) {
   (1, "Goblin :)".to_string(), to_cp437('g'), true)
 }

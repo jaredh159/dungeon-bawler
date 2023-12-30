@@ -76,6 +76,7 @@ impl State {
       let mut rng = RandomNumberGenerator::new();
       let map_builder = MapBuilder::new(&mut rng);
       spawn_player(&mut self.world, map_builder.player_start);
+      spawn_toothpaste_of_YALT(&mut self.world, map_builder.toothpaste_start);
       map_builder
         .rooms
         .iter()
