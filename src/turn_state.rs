@@ -2,7 +2,8 @@
 
 #[derive(Debug, Clone)]
 pub enum TurnState {
-  AwaitingInput, // case 0
-  PlayerTurn,    // case 1
-  MonsterTurn,   // case 2
+  AwaitingInput, // variant 0
+  PlayerTurn,    // variant 1
+  MonsterTurn,   // variant 2
+  GameOver,
 }

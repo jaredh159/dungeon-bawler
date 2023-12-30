@@ -46,6 +46,47 @@ impl State {
       monster_systems: build_monster_scheduler(),
     }
   }
+
+  fn game_over(&mut self, ctx: &mut BTerm) {
+    ctx.set_active_console(2);
+    ctx.print_color_centered(2, RED, BLACK, "Your quest took a big bamm ;/");
+    ctx.print_color_centered(4, WHEAT, BLACK, "Ouchie!");
+    ctx.print_color_centered(
+      5,
+      HOT_PINK,
+      BLACK,
+      "the toothpaste of YALT remains unused and even at death you have rotten teeth",
+    );
+    ctx.print_color_centered(
+      9,
+      SALMON,
+      BLACK,
+      "you still have a possebility of obtaining clean teeth",
+    );
+    ctx.print_color_centered(
+      11,
+      TURQUOISE,
+      BLACK,
+      "press SPACE to give a go at clean teeth",
+    );
+
+    if let Some(VirtualKeyCode::Space) = ctx.key {
+      self.world = World::default();
+      self.resources = Resources::default();
+      let mut rng = RandomNumberGenerator::new();
+      let map_builder = MapBuilder::new(&mut rng);
+      spawn_player(&mut self.world, map_builder.player_start);
+      map_builder
+        .rooms
+        .iter()
+        .skip(1)
+        .map(|rect| rect.center())
+        .for_each(|pos| spawn_monster(&mut self.world, &mut rng, pos));
+      self.resources.insert(map_builder.map);
+      self.resources.insert(Camera::new(map_builder.player_start));
+      self.resources.insert(TurnState::AwaitingInput);
+    }
+  }
 }
 
 impl GameState for State {
@@ -74,6 +115,7 @@ impl GameState for State {
       TurnState::MonsterTurn => self
         .monster_systems
         .execute(&mut self.world, &mut self.resources),
+      TurnState::GameOver => self.game_over(ctx),
     }
     render_draw_buffer(ctx).expect("Render error");
   }

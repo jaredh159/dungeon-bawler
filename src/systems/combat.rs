@@ -1,29 +1,8 @@
 use crate::prelude::*;
 
-fn adjust_health(
-  name: &'static str,
-  victim: &Entity,
-  remove_health: i32,
-  world: &mut SubWorld,
-  commands: &mut CommandBuffer,
-) {
-  if let Ok(victim_health) = world
-    .entry_mut(*victim)
-    .unwrap()
-    .get_component_mut::<Health>()
-  {
-    // now we have the health component of the victim
-    println!("{} health before attack: {}", name, victim_health.current);
-    victim_health.current -= remove_health;
-    if victim_health.current < 1 {
-      commands.remove(*victim);
-    }
-    println!("{} health after attack: {}", name, victim_health.current);
-  }
-}
-
 #[system]
 #[read_component(WantsToAttack)]
+#[read_component(Player)]
 #[write_component(Health)]
 pub fn combat(world: &mut SubWorld, commands: &mut CommandBuffer) {
   let mut attackers = <(Entity, &WantsToAttack)>::query();
@@ -36,4 +15,31 @@ pub fn combat(world: &mut SubWorld, commands: &mut CommandBuffer) {
     adjust_health("Attacker", attacker, 1, world, commands);
     commands.remove(*message);
   });
+}
+
+fn adjust_health(
+  name: &'static str,
+  entity: &Entity,
+  remove_health: i32,
+  world: &mut SubWorld,
+  commands: &mut CommandBuffer,
+) {
+  let is_player = world
+    .entry_ref(*entity)
+    .unwrap()
+    .get_component::<Player>()
+    .is_ok();
+  if let Ok(victim_health) = world
+    .entry_mut(*entity)
+    .unwrap()
+    .get_component_mut::<Health>()
+  {
+    // now we have the health component of the victim
+    println!("{} health before attack: {}", name, victim_health.current);
+    victim_health.current -= remove_health;
+    if victim_health.current < 1 && !is_player {
+      commands.remove(*entity); // remove dead (non-player) entity
+    }
+    println!("{} health after attack: {}", name, victim_health.current);
+  }
 }
