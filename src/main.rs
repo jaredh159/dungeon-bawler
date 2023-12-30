@@ -48,7 +48,7 @@ impl State {
   }
 
   fn game_over(&mut self, ctx: &mut BTerm) {
-    ctx.set_active_console(2);
+    ctx.set_active_console(3);
     ctx.print_color_centered(2, RED, BLACK, "Your quest took a big bamm ;/");
     ctx.print_color_centered(4, WHEAT, BLACK, "Ouchie!");
     ctx.print_color_centered(
@@ -98,6 +98,8 @@ impl GameState for State {
     ctx.cls();
     ctx.set_active_console(2);
     ctx.cls();
+    ctx.set_active_console(3);
+    ctx.cls();
 
     // insert key and mouse position
     self.resources.insert(ctx.key);
@@ -136,6 +138,7 @@ fn main() -> BError {
     .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "dungeon-font.png")
     .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "huckle-font.png")
     .with_simple_console_no_bg(SCREEN_WIDTH * 2, SCREEN_HEIGHT * 2, "terminal8x8.png")
+    .with_simple_console_no_bg(SCREEN_WIDTH, SCREEN_HEIGHT, "terminal8x8.png")
     .build()?;
 
   main_loop(context, State::new())
