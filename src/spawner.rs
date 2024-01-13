@@ -30,11 +30,11 @@ pub fn spawn_toothpaste_of_YALT(world: &mut World, pos: Point) {
 }
 
 fn drunken_goblin() -> (i32, String, FontCharType, bool) {
-  (1, "Goblin :)".to_string(), to_cp437('g'), true)
+  (1, "Goblin :)".to_string(), to_cp437('G'), true)
 }
 
 fn goblin() -> (i32, String, FontCharType, bool) {
-  (1, "Goblin :)".to_string(), to_cp437('g'), false)
+  (1, "Goblin :)".to_string(), to_cp437('G'), false)
 }
 
 fn huckle_troll() -> (i32, String, FontCharType, bool) {
