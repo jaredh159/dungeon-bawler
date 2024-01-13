@@ -35,11 +35,11 @@ fn adjust_health(
     .get_component_mut::<Health>()
   {
     // now we have the health component of the victim
-    println!("{} health before attack: {}", name, victim_health.current);
+    // println!("{} health before attack: {}", name, victim_health.current);
     victim_health.current -= remove_health;
     if victim_health.current < 1 && !is_player {
       commands.remove(*entity); // remove dead (non-player) entity
     }
-    println!("{} health after attack: {}", name, victim_health.current);
+    // println!("{} health after attack: {}", name, victim_health.current);
   }
 }

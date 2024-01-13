@@ -12,6 +12,7 @@ pub fn spawn_player(world: &mut World, pos: Point) {
     },
     Health { current: 10, max: 10 },
     Name("Player".to_string()),
+    FieldOfView::new(8),
   ));
 }
 
@@ -59,6 +60,7 @@ pub fn spawn_monster(world: &mut World, rng: &mut RandomNumberGenerator, pos: Po
       MovingRandomly {},
       Health { current: health, max: health },
       Name(name),
+      FieldOfView::new(6),
     ));
   } else {
     world.push((
