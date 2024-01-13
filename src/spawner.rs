@@ -8,7 +8,7 @@ pub fn spawn_player(world: &mut World, pos: Point) {
     pos,
     Render {
       color: ColorPair::new(WHITE, BLACK),
-      glyph: to_cp437('@'),
+      glyph: to_cp437('P'),
     },
     Health { current: 10, max: 10 },
     Name("Player".to_string()),
@@ -23,7 +23,7 @@ pub fn spawn_toothpaste_of_YALT(world: &mut World, pos: Point) {
     pos,
     Render {
       color: ColorPair::new(WHITE, BLACK),
-      glyph: to_cp437('|'),
+      glyph: to_cp437('T'),
     },
     Name("Toothpaste of YALT |:^(".to_string()),
   ));
