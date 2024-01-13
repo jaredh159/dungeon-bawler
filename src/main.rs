@@ -10,6 +10,7 @@ mod scratch;
 mod spawner;
 mod systems;
 mod turn_state;
+use bracket_lib::terminal::{BLUE, DARKGREEN, WHITE};
 use prelude::*;
 
 struct State {
@@ -27,6 +28,7 @@ impl State {
     let mut rng = RandomNumberGenerator::new();
     let map_builder = MapBuilder::new(&mut rng);
     spawn_player(&mut world, map_builder.player_start);
+    spawn_toothpaste_of_YALT(&mut world, map_builder.toothpaste_start);
     map_builder
       .rooms
       .iter()
@@ -67,26 +69,69 @@ impl State {
       11,
       TURQUOISE,
       BLACK,
-      "press SPACE to give a go at clean teeth",
+      "press ENTER to give a go at clean teeth",
     );
 
-    if let Some(VirtualKeyCode::Space) = ctx.key {
-      self.world = World::default();
-      self.resources = Resources::default();
-      let mut rng = RandomNumberGenerator::new();
-      let map_builder = MapBuilder::new(&mut rng);
-      spawn_player(&mut self.world, map_builder.player_start);
-      spawn_toothpaste_of_YALT(&mut self.world, map_builder.toothpaste_start);
-      map_builder
-        .rooms
-        .iter()
-        .skip(1)
-        .map(|rect| rect.center())
-        .for_each(|pos| spawn_monster(&mut self.world, &mut rng, pos));
-      self.resources.insert(map_builder.map);
-      self.resources.insert(Camera::new(map_builder.player_start));
-      self.resources.insert(TurnState::AwaitingInput);
+    if let Some(VirtualKeyCode::Return) = ctx.key {
+      self.reset_game_state();
     }
+  }
+
+  fn victory(&mut self, ctx: &mut BTerm) {
+    ctx.set_active_console(3);
+    ctx.print_color_centered(2, BLUE, WHITE, "look at your teeth");
+    ctx.print_color_centered(4, DARKGREEN, WHITE, "you made it");
+    ctx.print_color_centered(
+      5,
+      HOT_PINK,
+      WHITE,
+      "your smile slowly glimmers lighter and lighter",
+    );
+    ctx.print_color_centered(
+      9,
+      SADDLE_BROWN,
+      WHITE,
+      "the remaning monsters gasp and faint when",
+    );
+    ctx.print_color_centered(
+      11,
+      SADDLE_BROWN,
+      WHITE,
+      "they see you or scream at the top of their lungs",
+    );
+    ctx.print_color_centered(
+      13,
+      TURQUOISE,
+      WHITE,
+      "hello i am a very ferouscious monster!!! please don't harm me.",
+    );
+    ctx.print_color_centered(
+      15,
+      DARKRED,
+      WHITE,
+      "press ENTER for a whole new bottle of toothpaste",
+    );
+    if let Some(VirtualKeyCode::Return) = ctx.key {
+      self.reset_game_state();
+    }
+  }
+
+  fn reset_game_state(&mut self) {
+    self.world = World::default();
+    self.resources = Resources::default();
+    let mut rng = RandomNumberGenerator::new();
+    let map_builder = MapBuilder::new(&mut rng);
+    spawn_player(&mut self.world, map_builder.player_start);
+    spawn_toothpaste_of_YALT(&mut self.world, map_builder.toothpaste_start);
+    map_builder
+      .rooms
+      .iter()
+      .skip(1)
+      .map(|rect| rect.center())
+      .for_each(|pos| spawn_monster(&mut self.world, &mut rng, pos));
+    self.resources.insert(map_builder.map);
+    self.resources.insert(Camera::new(map_builder.player_start));
+    self.resources.insert(TurnState::AwaitingInput);
   }
 }
 
@@ -119,6 +164,7 @@ impl GameState for State {
         .monster_systems
         .execute(&mut self.world, &mut self.resources),
       TurnState::GameOver => self.game_over(ctx),
+      TurnState::FreshToothpaste => self.victory(ctx),
     }
     render_draw_buffer(ctx).expect("Render error");
   }

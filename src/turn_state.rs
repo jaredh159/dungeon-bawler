@@ -6,4 +6,5 @@ pub enum TurnState {
   PlayerTurn,    // variant 1
   MonsterTurn,   // variant 2
   GameOver,
+  FreshToothpaste,
 }
