@@ -20,13 +20,20 @@ pub fn movement(
 
         if entry.get_component::<Player>().is_ok() {
           camera.on_player_move(want_move.destination);
-          // everything the player can SEE, goes into his MEMORY
+          // everything the player can SEE, goes into his MEMORY fully
           fov.visible_tiles.iter().for_each(|pos| {
-            map.memory_tiles[map_index(pos.x, pos.y)] = true;
+            map.memory_tiles[map_index(pos.x, pos.y)] = 255;
           });
+          map.memory_tiles.iter_mut().for_each(|memory_strength| {
+            if *memory_strength >= MEMORY_LOST_PER_TURN {
+              *memory_strength -= MEMORY_LOST_PER_TURN;
+            }
+          })
         }
       }
     }
   }
   commands.remove(*entity);
 }
+
+const MEMORY_LOST_PER_TURN: u8 = 5;

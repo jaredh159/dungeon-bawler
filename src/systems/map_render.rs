@@ -16,11 +16,13 @@ pub fn map_render(world: &SubWorld, #[resource] map: &Map, #[resource] camera: &
       let offset = Point::new(camera.left_x, camera.top_y);
       let idx = map_index(x, y);
       // if point is in map AND player can see it OR remember...
-      if map.in_bounds(pt) && player_fov.visible_tiles.contains(&pt) | map.memory_tiles[idx] {
+      if map.in_bounds(pt) && (player_fov.visible_tiles.contains(&pt) || map.memory_tiles[idx] != 0)
+      {
         let tint = if player_fov.visible_tiles.contains(&pt) {
           WHITE
         } else {
-          (50, 50, 50)
+          let memory_strength = map.memory_tiles[idx];
+          (memory_strength, memory_strength, memory_strength)
         };
         let glyph = match map.tiles[idx] {
           TileType::Floor => to_cp437('F'),
