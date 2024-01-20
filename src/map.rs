@@ -10,6 +10,7 @@ pub enum TileType {
 // this is our map type
 pub struct Map {
   pub tiles: Vec<TileType>,
+  pub memory_tiles: Vec<bool>,
 }
 
 // our own `impl` block, where we add OUR functions
@@ -18,6 +19,7 @@ impl Map {
   pub fn new() -> Map {
     Map {
       tiles: vec![TileType::Floor; NUM_TILES],
+      memory_tiles: vec![false; NUM_TILES],
     }
   }
 

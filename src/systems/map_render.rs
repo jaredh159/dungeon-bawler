@@ -14,13 +14,19 @@ pub fn map_render(world: &SubWorld, #[resource] map: &Map, #[resource] camera: &
     for x in camera.left_x..=camera.right_x {
       let pt = Point::new(x, y);
       let offset = Point::new(camera.left_x, camera.top_y);
-      if map.in_bounds(pt) && player_fov.visible_tiles.contains(&pt) {
-        let idx = map_index(x, y);
+      let idx = map_index(x, y);
+      // if point is in map AND player can see it OR remember...
+      if map.in_bounds(pt) && player_fov.visible_tiles.contains(&pt) | map.memory_tiles[idx] {
+        let tint = if player_fov.visible_tiles.contains(&pt) {
+          WHITE
+        } else {
+          (50, 50, 50)
+        };
         let glyph = match map.tiles[idx] {
           TileType::Floor => to_cp437('F'),
           TileType::Wall => to_cp437('W'),
         };
-        draw_batch.set(pt - offset, ColorPair::new(WHITE, BLACK), glyph);
+        draw_batch.set(pt - offset, ColorPair::new(tint, BLACK), glyph);
       }
     }
   }
