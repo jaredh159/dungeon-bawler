@@ -73,6 +73,7 @@ pub fn spawn_monster(world: &mut World, rng: &mut RandomNumberGenerator, pos: Po
       IntelligentMonster {},
       Health { current: health, max: health },
       Name(name),
+      FieldOfView::new(6),
     ));
   }
 }
