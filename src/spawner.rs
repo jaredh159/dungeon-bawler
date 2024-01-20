@@ -47,7 +47,7 @@ fn ameretamium() -> (i32, String, FontCharType, bool) {
 }
 
 fn orc() -> (i32, String, FontCharType, bool) {
-  (2, "orc ;/".to_string(), to_cp437('o'), false)
+  (2, "orc ;/".to_string(), to_cp437('0'), false)
 }
 
 pub fn spawn_monster(world: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
