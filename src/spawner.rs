@@ -42,10 +42,20 @@ fn huckle_troll() -> (i32, String, FontCharType, bool) {
   (4, "Huckle Troll".to_string(), to_cp437('O'), false)
 }
 
+fn ameretamium() -> (i32, String, FontCharType, bool) {
+  (3, "ettin".to_string(), to_cp437('E'), false)
+}
+
+fn orc() -> (i32, String, FontCharType, bool) {
+  (2, "orc ;/".to_string(), to_cp437('o'), false)
+}
+
 pub fn spawn_monster(world: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
-  let (health, name, letter, has_wine) = match rng.roll_dice(1, 10) {
+  let (health, name, letter, has_wine) = match rng.roll_dice(1, 20) {
     1..=7 => goblin(),
     8 => drunken_goblin(),
+    9..=12 => orc(),
+    13..=15 => ameretamium(),
     _ => huckle_troll(),
   };
 
