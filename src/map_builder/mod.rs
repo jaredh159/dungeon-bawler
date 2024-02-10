@@ -1,8 +1,10 @@
 use crate::prelude::*;
 use empty::EmptyArchitect;
+use rooms::RoomsArchitect;
 const NUM_ROOMS: usize = 20;
 
 mod empty;
+mod rooms;
 
 trait MapArchitect {
   fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
@@ -18,7 +20,7 @@ pub struct MapBuilder {
 
 impl MapBuilder {
   pub fn new(rng: &mut RandomNumberGenerator) -> MapBuilder {
-    let mut architect = EmptyArchitect {};
+    let mut architect = RoomsArchitect {};
     architect.new(rng)
   }
 
@@ -105,9 +107,6 @@ impl MapBuilder {
       .unwrap()
       .0;
 
-    if farthest_reachable_index > 4000 {
-      panic!("whoa!");
-    }
     self.map.index_to_point2d(farthest_reachable_index)
   }
 }
