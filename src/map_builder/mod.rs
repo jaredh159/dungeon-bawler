@@ -1,45 +1,25 @@
 use crate::prelude::*;
+use empty::EmptyArchitect;
 const NUM_ROOMS: usize = 20;
+
+mod empty;
+
+trait MapArchitect {
+  fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
+}
 
 pub struct MapBuilder {
   pub map: Map,
   pub rooms: Vec<Rect>,
+  pub monster_spawns: Vec<Point>,
   pub player_start: Point,
   pub toothpaste_start: Point,
 }
 
 impl MapBuilder {
   pub fn new(rng: &mut RandomNumberGenerator) -> MapBuilder {
-    let mut mb = MapBuilder {
-      map: Map::new(),
-      rooms: vec![],
-      player_start: Point::zero(),
-      toothpaste_start: Point::zero(),
-    };
-    mb.fill(TileType::Wall);
-    mb.build_random_rooms(rng);
-    mb.build_corridors(rng);
-    mb.player_start = mb.rooms[0].center();
-    let dijkstra_map = DijkstraMap::new(
-      SCREEN_WIDTH,
-      SCREEN_HEIGHT,
-      &[mb.map.point2d_to_index(mb.player_start)],
-      &mb.map,
-      1024.0,
-    );
-    const UNREACHABLE: &f32 = &f32::MAX;
-
-    let farthest_reachable_index = dijkstra_map
-      .map
-      .iter() // give them one by one..
-      .enumerate() // package them in a tuple (index, value)
-      .filter(|(_, dist)| *dist < UNREACHABLE) // pitch unreachable
-      .max_by(|a, b| a.1.partial_cmp(b.1).unwrap()) // find biggest
-      .unwrap()
-      .0;
-
-    mb.toothpaste_start = mb.map.index_to_point2d(farthest_reachable_index);
-    mb
+    let mut architect = EmptyArchitect {};
+    architect.new(rng)
   }
 
   fn build_random_rooms(&mut self, rng: &mut RandomNumberGenerator) {
@@ -104,5 +84,30 @@ impl MapBuilder {
 
   fn fill(&mut self, tile_type: TileType) {
     self.map.tiles.iter_mut().for_each(|t| *t = tile_type);
+  }
+
+  fn find_most_distant(&self) -> Point {
+    const UNREACHABLE: &f32 = &f32::MAX;
+    let dijkstra_map = DijkstraMap::new(
+      SCREEN_WIDTH,
+      SCREEN_HEIGHT,
+      &[self.map.point2d_to_index(self.player_start)],
+      &self.map,
+      1024.0,
+    );
+
+    let farthest_reachable_index = dijkstra_map
+      .map
+      .iter() // give them one by one..
+      .enumerate() // package them in a tuple (index, value)
+      .filter(|(_, dist)| *dist < UNREACHABLE) // pitch unreachable
+      .max_by(|a, b| a.1.partial_cmp(b.1).unwrap()) // find biggest
+      .unwrap()
+      .0;
+
+    if farthest_reachable_index > 4000 {
+      panic!("whoa!");
+    }
+    self.map.index_to_point2d(farthest_reachable_index)
   }
 }

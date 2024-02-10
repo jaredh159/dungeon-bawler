@@ -56,7 +56,13 @@ impl Map {
 // here are functions for `BaseMap` TRAIT
 impl BaseMap for Map {
   fn is_opaque(&self, idx: usize) -> bool {
-    self.tiles[idx] != TileType::Floor
+    // not sure why we're trapping without the bounds check,
+    // hubert doesn't check, probably something we did :/
+    if idx >= self.tiles.len() {
+      true
+    } else {
+      self.tiles[idx] != TileType::Floor
+    }
   }
 
   fn get_available_exits(&self, index: usize) -> SmallVec<[(usize, f32); 10]> {
