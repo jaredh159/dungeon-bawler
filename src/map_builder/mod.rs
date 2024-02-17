@@ -1,8 +1,11 @@
 use crate::prelude::*;
+use automata::ConwaysGameOfLifeArchitect;
 use empty::EmptyArchitect;
 use rooms::RoomsArchitect;
+
 const NUM_ROOMS: usize = 20;
 
+mod automata;
 mod empty;
 mod rooms;
 
@@ -18,9 +21,21 @@ pub struct MapBuilder {
   pub toothpaste_start: Point,
 }
 
+impl Default for MapBuilder {
+  fn default() -> MapBuilder {
+    MapBuilder {
+      map: Map::new(),
+      rooms: Vec::new(),
+      monster_spawns: Vec::new(),
+      player_start: Point::zero(),
+      toothpaste_start: Point::zero(),
+    }
+  }
+}
+
 impl MapBuilder {
   pub fn new(rng: &mut RandomNumberGenerator) -> MapBuilder {
-    let mut architect = RoomsArchitect {};
+    let mut architect = ConwaysGameOfLifeArchitect {};
     architect.new(rng)
   }
 
@@ -108,5 +123,28 @@ impl MapBuilder {
       .0;
 
     self.map.index_to_point2d(farthest_reachable_index)
+  }
+
+  fn spawn_monsters(&self, start: &Point, rng: &mut RandomNumberGenerator) -> Vec<Point> {
+    const NUM_MONSTERS: usize = 50;
+    let mut spawnable_tiles: Vec<Point> = self
+      .map
+      .tiles
+      .iter()
+      .enumerate()
+      .filter(|(idx, t)| **t == TileType::Floor)
+      .filter(|(idx, t)| {
+        DistanceAlg::Pythagoras.distance2d(*start, self.map.index_to_point2d(*idx)) > 10.0
+      })
+      .map(|(idx, _)| self.map.index_to_point2d(idx))
+      .collect();
+
+    let mut spawns = Vec::new();
+    for _ in 0..NUM_MONSTERS {
+      let random_index = rng.random_slice_index(&spawnable_tiles).unwrap();
+      spawns.push(spawnable_tiles[random_index]);
+      spawnable_tiles.remove(random_index); // don't want 2 monsters on same tile
+    }
+    spawns
   }
 }

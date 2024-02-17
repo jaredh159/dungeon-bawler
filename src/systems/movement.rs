@@ -36,4 +36,4 @@ pub fn movement(
   commands.remove(*entity);
 }
 
-const MEMORY_LOST_PER_TURN: u8 = 4;
+const MEMORY_LOST_PER_TURN: u8 = 3;
