@@ -1,11 +1,13 @@
 use crate::prelude::*;
 use automata::ConwaysGameOfLifeArchitect;
+use drunkard::DrunkardsWalkArchitect;
 use empty::EmptyArchitect;
 use rooms::RoomsArchitect;
 
 const NUM_ROOMS: usize = 20;
 
 mod automata;
+mod drunkard;
 mod empty;
 mod rooms;
 
@@ -35,7 +37,7 @@ impl Default for MapBuilder {
 
 impl MapBuilder {
   pub fn new(rng: &mut RandomNumberGenerator) -> MapBuilder {
-    let mut architect = ConwaysGameOfLifeArchitect {};
+    let mut architect = DrunkardsWalkArchitect {};
     architect.new(rng)
   }
 
