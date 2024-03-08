@@ -41,6 +41,21 @@ impl MapBuilder {
     architect.new(rng)
   }
 
+  pub fn fill_edges(&mut self) {
+    self
+      .map
+      .tiles
+      .iter_mut()
+      .enumerate()
+      .filter(|(idx, _)| {
+        let idx: i32 = *idx as i32;
+        !(SCREEN_WIDTH..(SCREEN_WIDTH * (SCREEN_HEIGHT - 1))).contains(&idx)
+          || idx % SCREEN_WIDTH == 0
+          || idx % SCREEN_WIDTH == SCREEN_WIDTH - 1
+      })
+      .for_each(|(_, tile)| *tile = TileType::Wall)
+  }
+
   fn build_random_rooms(&mut self, rng: &mut RandomNumberGenerator) {
     while self.rooms.len() < NUM_ROOMS {
       let proposed_room = Rect::with_size(
@@ -127,7 +142,8 @@ impl MapBuilder {
     self.map.index_to_point2d(farthest_reachable_index)
   }
 
-  fn spawn_monsters(&self, start: &Point, rng: &mut RandomNumberGenerator) -> Vec<Point> {
+  fn spawn_monsters(&mut self, start: &Point, rng: &mut RandomNumberGenerator) -> Vec<Point> {
+    self.fill_edges();
     const NUM_MONSTERS: usize = 50;
     let mut spawnable_tiles: Vec<Point> = self
       .map

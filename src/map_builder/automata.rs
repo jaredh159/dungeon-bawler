@@ -10,6 +10,7 @@ impl MapArchitect for ConwaysGameOfLifeArchitect {
     for _ in 0..10 {
       self.generation(&mut mb.map);
     }
+    mb.fill_edges();
     let start = self.find_start(&mb.map);
     mb.monster_spawns = mb.spawn_monsters(&start, rng);
     mb.player_start = start;

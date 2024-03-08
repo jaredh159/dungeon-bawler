@@ -29,7 +29,6 @@ impl MapArchitect for DrunkardsWalkArchitect {
         rng,
         &mut mb.map,
       );
-      // from here...
       let dijkstra_map = DijkstraMap::new(
         SCREEN_WIDTH,
         SCREEN_HEIGHT,
@@ -43,8 +42,8 @@ impl MapArchitect for DrunkardsWalkArchitect {
         .enumerate()
         .filter(|(_, distance)| *distance > &2000.0)
         .for_each(|(idx, _)| mb.map.tiles[idx] = TileType::Wall)
-      // ...to here
     }
+    mb.fill_edges();
     mb.monster_spawns = mb.spawn_monsters(&center, rng);
     mb.player_start = center;
     mb.toothpaste_start = mb.find_most_distant();

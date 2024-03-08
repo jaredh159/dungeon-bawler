@@ -7,6 +7,7 @@ impl MapArchitect for EmptyArchitect {
   fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
     let mut mb = MapBuilder::default();
     mb.fill(TileType::Floor);
+    mb.fill_edges();
     mb.player_start = Point::new(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     mb.toothpaste_start = mb.find_most_distant();
     for _ in 0..50 {
