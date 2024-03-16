@@ -37,7 +37,11 @@ impl Default for MapBuilder {
 
 impl MapBuilder {
   pub fn new(rng: &mut RandomNumberGenerator) -> MapBuilder {
-    let mut architect = DrunkardsWalkArchitect {};
+    let mut architect: Box<dyn MapArchitect> = match rng.range(0, 3) {
+      0 => Box::new(DrunkardsWalkArchitect {}),
+      1 => Box::new(RoomsArchitect {}),
+      _ => Box::new(ConwaysGameOfLifeArchitect {}),
+    };
     architect.new(rng)
   }
 

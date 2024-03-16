@@ -12,6 +12,7 @@ pub struct DrunkardsWalkArchitect {}
 // give a person (type) a skill (trait)
 impl MapArchitect for DrunkardsWalkArchitect {
   fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
+    println!("DrunkardsWalkArchitect");
     let mut mb = MapBuilder::default();
     mb.fill(TileType::Wall);
     let center = Point::new(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);

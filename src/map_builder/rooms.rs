@@ -5,6 +5,7 @@ pub struct RoomsArchitect {}
 
 impl MapArchitect for RoomsArchitect {
   fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
+    println!("RoomsArchitect");
     let mut mb = MapBuilder::default();
     mb.fill(TileType::Wall);
     mb.build_random_rooms(rng);

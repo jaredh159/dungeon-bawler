@@ -5,6 +5,7 @@ pub struct ConwaysGameOfLifeArchitect {}
 
 impl MapArchitect for ConwaysGameOfLifeArchitect {
   fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder {
+    println!("ConwaysGameOfLifeArchitect");
     let mut mb = MapBuilder::default();
     self.random_noise_map(rng, &mut mb.map);
     for _ in 0..10 {
