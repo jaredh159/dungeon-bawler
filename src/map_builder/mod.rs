@@ -3,6 +3,7 @@ use automata::ConwaysGameOfLifeArchitect;
 use drunkard::DrunkardsWalkArchitect;
 use empty::EmptyArchitect;
 use rooms::RoomsArchitect;
+use themes::*;
 
 use self::prefab::apply_prefab;
 
@@ -13,9 +14,16 @@ mod drunkard;
 mod empty;
 mod prefab;
 mod rooms;
+mod themes;
 
 trait MapArchitect {
   fn new(&mut self, rng: &mut RandomNumberGenerator) -> MapBuilder;
+}
+
+// `marker` traits
+// multi-threading
+pub trait MapTheme: Sync + Send {
+  fn tile_to_render(&self, tile_type: TileType) -> FontCharType;
 }
 
 pub struct MapBuilder {
@@ -24,6 +32,7 @@ pub struct MapBuilder {
   pub monster_spawns: Vec<Point>,
   pub player_start: Point,
   pub toothpaste_start: Point,
+  pub theme: Box<dyn MapTheme>,
 }
 
 impl Default for MapBuilder {
@@ -34,6 +43,7 @@ impl Default for MapBuilder {
       monster_spawns: Vec::new(),
       player_start: Point::zero(),
       toothpaste_start: Point::zero(),
+      theme: HubertsDungeonTheme::new(),
     }
   }
 }
@@ -47,6 +57,12 @@ impl MapBuilder {
     };
     let mut mb = architect.new(rng);
     apply_prefab(&mut mb, rng);
+    mb.theme = match rng.range(0, 3) {
+      0 => HucksDungeonTheme::new(),
+      1 => ForestTheme::new(),
+      _ => HubertsDungeonTheme::new(),
+    };
+
     mb
   }
 

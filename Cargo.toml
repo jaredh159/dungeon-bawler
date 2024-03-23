@@ -12,4 +12,4 @@ legion = "0.3.1"
 [lints.clippy]
 new-ret-no-self = "allow"
 wrong-self-convention = "allow"
-
+borrowed-box = "allow"
