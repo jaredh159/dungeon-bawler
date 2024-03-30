@@ -2,10 +2,18 @@ use crate::prelude::*;
 use std::collections::HashSet;
 
 #[derive(Clone, Copy, PartialEq, Debug)]
+pub struct ProvidesHealing {
+  pub amount: i32,
+}
+
+#[derive(Clone, Copy, PartialEq, Debug)]
 pub struct Render {
   pub color: ColorPair,
   pub glyph: FontCharType,
 }
+
+#[derive(Clone, Copy, PartialEq, Debug)]
+pub struct ProvidesDungeonMap;
 
 #[derive(Clone, PartialEq, Debug)]
 pub struct FieldOfView {

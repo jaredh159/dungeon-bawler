@@ -31,7 +31,7 @@ impl State {
     spawn_toothpaste_of_YALT(&mut world, map_builder.toothpaste_start);
 
     map_builder.monster_spawns.iter().for_each(|pos| {
-      spawn_monster(&mut world, &mut rng, *pos);
+      spawn_entity(&mut world, &mut rng, *pos);
     });
     resources.insert(TurnState::AwaitingInput);
     resources.insert(map_builder.map);
@@ -123,7 +123,7 @@ impl State {
     map_builder
       .monster_spawns
       .iter()
-      .for_each(|pos| spawn_monster(&mut self.world, &mut rng, *pos));
+      .for_each(|pos| spawn_entity(&mut self.world, &mut rng, *pos));
     self.resources.insert(map_builder.map);
     self.resources.insert(Camera::new(map_builder.player_start));
     self.resources.insert(TurnState::AwaitingInput);

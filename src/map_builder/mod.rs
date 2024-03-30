@@ -62,7 +62,6 @@ impl MapBuilder {
       1 => ForestTheme::new(),
       _ => HubertsDungeonTheme::new(),
     };
-
     mb
   }
 

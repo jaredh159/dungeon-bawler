@@ -87,3 +87,38 @@ pub fn spawn_monster(world: &mut World, rng: &mut RandomNumberGenerator, pos: Po
     ));
   }
 }
+
+pub fn spawn_healing_potion(world: &mut World, pos: Point) {
+  world.push((
+    Item,
+    pos,
+    Render {
+      color: ColorPair::new(WHITE, BLACK),
+      glyph: to_cp437('!'),
+    },
+    Name("Healing Potion".to_string()),
+    ProvidesHealing { amount: 6 },
+  ));
+}
+
+pub fn spawn_magic_mapping(world: &mut World, pos: Point) {
+  world.push((
+    Item,
+    pos,
+    Render {
+      color: ColorPair::new(WHITE, BLACK),
+      glyph: to_cp437('{'),
+    },
+    Name("magic map".to_string()),
+    ProvidesDungeonMap {},
+  ));
+}
+
+pub fn spawn_entity(world: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
+  let roll = rng.roll_dice(1, 6);
+  match roll {
+    1 => spawn_healing_potion(world, pos),
+    2 => spawn_magic_mapping(world, pos),
+    _ => spawn_monster(world, rng, pos),
+  }
+}
