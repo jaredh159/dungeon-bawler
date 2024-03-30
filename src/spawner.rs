@@ -115,7 +115,7 @@ pub fn spawn_magic_mapping(world: &mut World, pos: Point) {
 }
 
 pub fn spawn_entity(world: &mut World, rng: &mut RandomNumberGenerator, pos: Point) {
-  let roll = rng.roll_dice(1, 6);
+  let roll = rng.roll_dice(1, 10);
   match roll {
     1 => spawn_healing_potion(world, pos),
     2 => spawn_magic_mapping(world, pos),
